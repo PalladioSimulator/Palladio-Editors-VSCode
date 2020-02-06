@@ -1,0 +1,76 @@
+def vsExtensionDestDir = "$rootProject.projectDir/target"
+def vsExtensionName = "palladio-languageserver.vsix"
+def build_date = new Date().format('yyyyMMddHHmmss')
+
+task downloadZipFile(type: Download) {
+    src lsp_download_url
+    dest new File(vsExtensionDestDir, 'palladio-languageserver.zip')
+    overwrite true
+}
+
+task downloadAndUnzipFile(dependsOn: downloadZipFile, type: Copy) {
+    from zipTree(downloadZipFile.dest)
+    into buildDir
+}
+
+node {
+    download = true
+}
+
+// https://github.com/node-gradle/gradle-node-plugin/blob/master/docs/node.md
+// When adding the node plugin, you will have a npmInstall task already added.
+npmInstall.dependsOn downloadAndUnzipFile
+
+// Install vsce
+// npmSetup: downloads NodeJS (for your platform) and NPM (Node Package Manager) if on Windows (other platforms include it into the distribution).
+task npmInstallVsce(type: NpmTask, dependsOn: npmSetup) {
+    ext.destPath = "${projectDir}/node_modules/vsce"
+    outputs.dir(destPath)
+    group 'Node'
+    description 'Installs the NodeJS package "Visual Studio Code Extension Manager"'
+    args = [ 'install', 'vsce' ]
+}
+
+def inputFiles = fileTree(
+    dir: projectDir,
+    excludes: [ 'out/**', '.gitignore', '.gradle/**', 'build/**', '*.gradle' ]
+)
+
+npmInstall {
+    inputs.files(inputFiles)
+    outputs.dir('out')
+}
+
+task packageVSExtension(dependsOn: [npmInstall, npmInstallVsce], type: NodeTask) {
+    ext.destDir = new File(buildDir, 'vscode')
+    ext.archiveName = "${project.name}-${project.version}_${build_date}.vsix"
+    ext.destPath = "$destDir/$archiveName"
+    inputs.with {
+        files inputFiles
+        dir npmInstallVsce.destPath
+    }
+    outputs.dir destDir
+    doFirst {
+        destDir.mkdirs()
+    }
+    script = file("$npmInstallVsce.destPath/out/vsce")
+    args = [ 'package', '--out', destPath ]
+    execOverrides {
+        workingDir = projectDir
+    }
+}
+
+task copyVSExtensionToTarget(type: Copy, dependsOn: packageVSExtension) {
+    from (packageVSExtension.destDir)
+    include packageVSExtension.archiveName
+    destinationDir file("$vsExtensionDestDir/")
+    rename "$packageVSExtension.archiveName", "$vsExtensionName"
+}
+
+task clean {
+    doLast {
+        delete 'out'
+        delete buildDir
+        delete 'node_modules'
+    }
+}

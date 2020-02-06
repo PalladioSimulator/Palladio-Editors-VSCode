@@ -1,0 +1,67 @@
+{
+    "name": "palladio",
+    "displayName": "Palladio Language Server",
+    "description": "palladio language server",
+    "version": "0.0.1",
+    "publisher": "Ting",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/merlinz165/che4palladio.git"
+    },
+    "engines": {
+        "vscode": "^1.41.0"
+    },
+    "categories": [
+        "Programming Languages"
+    ],
+    "activationEvents": [
+        "onLanguage:palladio"
+    ],
+    "main": "./out/extension.js",
+    "contributes": {
+        "languages": [
+            {
+                "id": "palladio",
+                "aliases": [
+                    "palladio",
+                    "Palladio",
+                    "PALLADIO"
+                ],
+                "extensions": [
+                    "trepo"
+                ],
+                "configuration": "./language-configuration.json"
+            }
+        ],
+        "grammars": [
+            {
+                "language": "palladio",
+                "scopeName": "text.palladio",
+                "path": "./syntaxes/palladio.tmLanguage.json"
+            }
+        ]
+    },
+    "scripts": {
+        "vscode:prepublish": "yarn run compile",
+        "compile": "tsc -p ./",
+        "watch": "tsc -watch -p ./",
+        "pretest": "yarn run compile",
+        "test": "node ./out/test/runTest.js"
+    },
+    "devDependencies": {
+        "@types/glob": "^7.1.1",
+        "@types/mocha": "^5.2.7",
+        "@types/node": "^12.11.7",
+        "@types/vscode": "^1.41.0",
+        "glob": "^7.1.5",
+        "mocha": "^6.2.2",
+        "typescript": "^3.6.4",
+        "tslint": "^5.20.0",
+        "vscode-test": "^1.2.2",
+        "yarn": "^1.21.1"
+    },
+    "dependencies": {
+        "vsce": "^1.73.0",
+        "vscode-languageclient": "^5.2.1"
+    }
+}

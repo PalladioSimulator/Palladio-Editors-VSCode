@@ -1,0 +1,17 @@
+buildscript {
+    repositories {
+        mavenLocal()
+        maven {
+            url "https://plugins.gradle.org/m2/"
+        }
+    }
+    dependencies {
+        classpath "com.github.node-gradle:gradle-node-plugin:2.2.1"
+        classpath "de.undercouch:gradle-download-task:4.0.4"
+    }
+}
+
+subprojects {
+    apply plugin: "com.github.node-gradle.node"
+    apply plugin: "de.undercouch.download"
+}
