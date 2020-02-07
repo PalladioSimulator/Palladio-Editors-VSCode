@@ -41,7 +41,17 @@ npmInstall {
     outputs.dir('out')
 }
 
-task packageVSExtension(dependsOn: [npmInstall, npmInstallVsce], type: NodeTask) {
+task updateExtensionVersion {
+    def versionPattern = /\d+.\d+(.\d+)?/
+    def encoding = 'UTF-8'
+
+    def packageFile = new File(projectDir, 'package.json')
+    String contents = packageFile.getText(encoding)
+    contents = contents.replaceAll("\"version\": \"$versionPattern\",", "\"version\": \"$project.version\",")
+    packageFile.setText(contents, encoding)
+}
+
+task packageVSExtension(dependsOn: [npmInstall, npmInstallVsce, updateExtensionVersion], type: NodeTask) {
     ext.destDir = new File(buildDir, 'vscode')
     ext.archiveName = "${project.name}-${project.version}_${build_date}.vsix"
     ext.destPath = "$destDir/$archiveName"
