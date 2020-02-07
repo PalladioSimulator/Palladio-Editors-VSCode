@@ -9,6 +9,7 @@
 
   <modules>
       <module>vscode-palladio</module>
+      <module>palladio-devfiles</module>
   </modules>
 
 </project>
