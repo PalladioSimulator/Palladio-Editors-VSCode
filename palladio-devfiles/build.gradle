@@ -1,0 +1,26 @@
+task updatePluginVersion {
+    def versionPattern = /\d+.\d+(.\d+)?/
+    def encoding = 'UTF-8'
+    def packageFile = new File("${projectDir}/plugins", 'palladio-lsp.yaml')
+    String contents = packageFile.getText(encoding)
+    contents = contents.replaceAll("version: $versionPattern", "version: $project.version")
+    packageFile.setText(contents, encoding)
+}
+
+task updateExtensionUrl(dependsOn:updatePluginVersion) {
+    def extensionUrlPattern = /extensions:\n( ){4}\-( )(https?:\/\/)?(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.*[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&\/\/=]*)(\.vsix){1}/
+    def encoding = 'UTF-8'
+    def pluginFile = new File("${projectDir}/plugins", 'palladio-lsp.yaml')
+    String contents = pluginFile.getText(encoding)
+    contents = contents.replaceAll(extensionUrlPattern, "extensions:\n    - $project.vsix_url")
+    pluginFile.setText(contents, encoding)
+}
+
+task updateDevfile {
+    def pluginFileUrlPattern = /reference\:(( )?\'(https?:\/\/)?(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.*[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&\/\/=]*)(\.yaml){1}\')?/
+    def encoding = 'UTF-8'
+    def devFile = new File(projectDir, 'devfile.yaml')
+    String contents = devFile.getText(encoding)
+    contents = contents.replaceAll(pluginFileUrlPattern, "reference: '${project.plugin_yaml_url}'")
+    devFile.setText(contents, encoding)
+}

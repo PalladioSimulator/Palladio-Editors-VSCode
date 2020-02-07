@@ -4,4 +4,4 @@
 
 rootProject.name = 'che4palladio'
 include(':vscode-palladio')
-// include(':palladio-devfiles')
+include(':palladio-devfiles')

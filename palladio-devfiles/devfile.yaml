@@ -1,0 +1,12 @@
+apiVersion: 1.0.0
+metadata:
+  generateName: KIT-Palladio-
+projects:
+  - name: palladio-sample
+    source:
+      type: git
+      location: 'https://github.com/merlinz165/palladio-sample.git'
+components:
+  - type: chePlugin
+    reference: 'https://palladio-lsp.yaml'
+    alias: vscode-palladio

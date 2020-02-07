@@ -1,0 +1,19 @@
+apiVersion: v2
+publisher: Ting
+name: vscode-palladio
+version: 0.0.1
+type: VS Code extension
+displayName: Palladio Language Server
+title: Palladio Language Support
+description: This VS Code extension provides support for creating and editing Palladio documents, based on the Palladio language server (Xtext), running with Java.
+icon: https://www.palladio-simulator.com/fileadmin/_processed_/0/e/csm_palladio-logo-2010_e3b7e086b4.png
+repository: https://github.com/PalladioSimulator/Palladio-Addons-TextBasedModelGenerator
+category: Language
+firstPublicationDate: "2020-02-04"
+spec:
+  containers:
+    - image: "docker.io/eclipse/che-remote-plugin-runner-java11:next"
+      name: vscode-palladio
+      memoryLimit: "768Mi"
+  extensions:
+    - https://palladio-languageserver.vsix
