@@ -1,5 +1,15 @@
 # Web-based textual PCM editor for the next-generation IDE Eclipse Che
 
+
+**Archived due to:**
+- Main developer not active in this organization
+- No dependencies to other projects
+- Potential security vulnerabilities
+- Not used by others in this organization
+- No active development since 2020
+
+
+
 This repository aims to automatically generate an Eclipse Che workspace template supporting Palladio domain-specific language(DSL).
 
 It consists of a [Palladio DSL support extension for VS Code](./vscode-palladio) and the corresponding [Eclipse Che devfile generator](./palladio-devfiles).
